@@ -1,8 +1,8 @@
 # Model Discussion and Conclusions for Wine Dataset Analysis
 
-This section details the results of the model building and training phase, focusing on a direct comparison between two distance-based algorithms: K-Means Clustering (unsupervised) and K-Nearest Neighbors (KNN, supervised).
+This section details the results of the model building and training phase, focusing on a direct comparison between two distance-based algorithms: K-Means Clustering (unsupervised), K-Nearest Neighbors (KNN, supervised), and Principal Component Analysis (PCA).
 
-## Unsupervised Learning Model: K-Means Clustering
+## Unsupervised Learning and Preprocessing
 
 Objective: To determine if the inherent feature space, without using the true class labels, naturally groups the data points into the three distinct wine cultivars.
 
@@ -20,9 +20,24 @@ Adjusted Mutual Information (AMI): $\approx 0.89$
 
 An ARI close to $1.0$ confirms the initial EDA hypothesis: the features contain a strong, separable structure that defines the three cultivars. This high score is only possible because the crucial step of Standardization was performed, preventing the feature 'Proline' (with its high magnitude) from dominating the distance calculations.
 
-## Supervised Learning Model: K-Nearest Neighbors (KNN) Classifier
+4. Principal Component Analysis
+PCA was introduced to address multicollinearlity identified in the EDA and simplify the model by reducing the feature count.
 
-Objective: To build a high-performance supervised classifier that also relies on distance metrics, and to optimize its critical hyperparameters.
+Variance Retention: The PCA analysis found that 8 components are required to explain over 90% of the total variance in the dataset.
+
+Visual Confirmation: A scatter plot of the first two Principal Components clearly showed that the three wine classes are already highly distinct and clustered in this 2D space.
+
+Conclusion: PCA is effective, but only reduces dimensionality from 13 to 8 components.
+
+## Supervised Learning Model: K-Nearest Neighbors (KNN)
+
+The KNN classifier was used to evaluate both he full feature set and the PCA-transformed feature set.
+
+| Model Varient | Number of Features | Best Accuracy on Test Set     | Dimensionality Reduction Effectiveness                            |
+|---------------|--------------------|-------------------------------|-------------------------------------------------------------------|
+| KNN           | 13                 | $\approx 0.98$ (Near-Perfect) | Baseline performance                                              |
+| KNN (PCA)     | 8                  | $\approx 0.96$ (Excellent)    | Retained $\approx 0.98$ of the original accuracy with 8 features. |
+
 
 Procedure:
 1. Scaling: The training data was scaled (StandardScaler fitted on $X_{train}$), and this transformation was applied to both $X_{train}$ and $X_{test}$ to prevent data leakage.
